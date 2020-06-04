@@ -1,0 +1,346 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <title>Edificio </title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <script src="js/three.min.js"></script>
+    <script src="js/controls/OrbitControls.js"></script>
+    <script>
+		var scene, aspect, camera, renderer, controls;
+		var startTime = Date.now();		
+		var geo1, geo2, geo3, geo4;
+                var geo5, geo6, geo7, geo8;
+		var g1, g2, g3, g4;
+                var g5, g6, g7, g8;
+                var geometria, fan;
+                var objeto1, objeto2, objeto3, objeto4;
+                var objeto5, objeto6, objeto7, objeto8;
+                var obj1, obj2, obj3, obj4;
+                var obj5, obj6, obj7, obj8;
+
+		class TRIANGLE_FAN{	
+		  constructor( Geometria ){
+		    this.geometria = Geometria;
+			console.log(this.geometria);
+		  }  
+		  draw(){			
+			for( var i=2; i<this.geometria.vertices.length; i++ ){
+			  this.geometria.faces.push( new THREE.Face3(0,i-1,i) );
+			}
+			this.geometria.computeFaceNormals();
+			var materialFan = new THREE.MeshBasicMaterial( { color: 0x3333DD, side:THREE.DoubleSide } );
+			var fan = new THREE.Mesh( this.geometria, materialFan );
+			scene.add( fan );
+		  }
+		}
+
+		init();
+		animate();
+	
+		function init(){
+			//INICIALIZACIÓN DE LA ESCENA
+			scene = new THREE.Scene();
+                        scene.background = new THREE.Color( 0xAAAAAA );
+			aspect = window.innerWidth / window.innerHeight;
+			camera = new THREE.PerspectiveCamera( 45, aspect, 0.1, 1000);
+			renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+                        controls = new THREE.OrbitControls( camera, renderer.domElement );
+            
+	
+			
+			//ELEMENTOS DE ESCENA
+			var size = 10;
+			var arrowSize = 1;
+			var divisions = size;
+			var origin = new THREE.Vector3( 0, 0, 0 );
+			var x = new THREE.Vector3( 1, 0, 0 );
+			var y = new THREE.Vector3( 0, 1, 0 );
+		  	var z = new THREE.Vector3( 0, 0, 1 );
+			var color1 = new THREE.Color( 0xFFFFFF );
+		  	var color2 = new THREE.Color( 0x333333 );
+		  	var colorR = new THREE.Color( 0xAA3333 );
+		  	var colorG = new THREE.Color( 0x33AA33 );
+		  	var colorB = new THREE.Color( 0x333366 );
+			var colorRd = new THREE.Color( 0xAA6666 );
+		  	var colorGd = new THREE.Color( 0x66AA66 );
+		  	var colorBd = new THREE.Color( 0x6666AA );
+		  
+		  	//CREAR LAS GRILLAS PARA EL ESCENARIO
+		  	var axesHelper = new THREE.AxesHelper( size );
+		  	var gridHelperXY = new THREE.GridHelper( size, divisions, color1, color1);
+		  	var gridHelperXZ = new THREE.GridHelper( size, divisions, color2, color2 );
+		  	var gridHelperYZ = new THREE.GridHelper( size, divisions, color2, color2 );
+            
+            //ROTARLAS PARA QUE QUEDEN EN EL ESPACIO ADECUADO
+            gridHelperXY.rotateOnWorldAxis ( x, THREE.Math.degToRad(90) );
+            gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+            gridHelperYZ.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+            
+			
+			//CREAR LAS GEOMETRÍAS
+			geo1 = new THREE.Geometry();
+			var p1 = new THREE.Vector3(1,0,-1);
+			var p2 = new THREE.Vector3(1,0,1);
+			var p3 = new THREE.Vector3(1,2,1);                  
+			geo1.vertices.push(p1);
+			geo1.vertices.push(p2);
+			geo1.vertices.push(p3);			
+			geo1.faces.push( new THREE.Face3(0,1,2) );
+			geo1.computeFaceNormals();
+
+			g1 = new THREE.Geometry();
+			var pg1 = new THREE.Vector3(3,0,-3);
+			var pg2 = new THREE.Vector3(3,0,3);
+			var pg3 = new THREE.Vector3(3,1,3);                  
+			g1.vertices.push(pg1);
+			g1.vertices.push(pg2);
+			g1.vertices.push(pg3);			
+			g1.faces.push( new THREE.Face3(0,1,2) );
+			g1.computeFaceNormals();
+
+			geo2 = new THREE.Geometry();
+			var pp1 = new THREE.Vector3(1,2,1);
+			var pp2 = new THREE.Vector3(1,2,-1);
+			var pp3 = new THREE.Vector3(1,0,-1);                  
+			geo2.vertices.push(pp1);
+			geo2.vertices.push(pp2);
+			geo2.vertices.push(pp3);			
+			geo2.faces.push( new THREE.Face3(0,1,2) );
+			geo2.computeFaceNormals();
+
+			g2 = new THREE.Geometry();
+			var ppg1 = new THREE.Vector3(3,1,3);
+			var ppg2 = new THREE.Vector3(3,1,-3);
+			var ppg3 = new THREE.Vector3(3,0,-3);                  
+			g2.vertices.push(ppg1);
+			g2.vertices.push(ppg2);
+			g2.vertices.push(ppg3);			
+			g2.faces.push( new THREE.Face3(0,1,2) );
+			g2.computeFaceNormals();
+
+			geo3 = new THREE.Geometry();
+			var ppp1 = new THREE.Vector3(1,0,1);
+			var ppp2 = new THREE.Vector3(-1,0,1);
+			var ppp3 = new THREE.Vector3(-1,2,1); 
+			geo3.vertices.push(ppp1);
+			geo3.vertices.push(ppp2);
+			geo3.vertices.push(ppp3);			
+			geo3.faces.push( new THREE.Face3(0,1,2) );
+			geo3.computeFaceNormals();
+
+			g3 = new THREE.Geometry();
+			var pppg1 = new THREE.Vector3(3,0,3);
+			var pppg2 = new THREE.Vector3(-3,0,3);
+			var pppg3 = new THREE.Vector3(-3,1,3);                  
+			g3.vertices.push(pppg1);
+			g3.vertices.push(pppg2);
+			g3.vertices.push(pppg3);			
+			g3.faces.push( new THREE.Face3(0,1,2) );
+			g3.computeFaceNormals();
+
+			geo4 = new THREE.Geometry();
+			var pppp1 = new THREE.Vector3(-1,2,1);
+			var pppp2 = new THREE.Vector3(1,2,1);
+			var pppp3 = new THREE.Vector3(1,0,1); 
+			geo4.vertices.push(pppp1);
+			geo4.vertices.push(pppp2);
+			geo4.vertices.push(pppp3);			
+			geo4.faces.push( new THREE.Face3(0,1,2) );
+			geo4.computeFaceNormals();
+
+			g4 = new THREE.Geometry();
+			var ppppg1 = new THREE.Vector3(-3,1,3);
+			var ppppg2 = new THREE.Vector3(3,1,3);
+			var ppppg3 = new THREE.Vector3(3,0,3);                  
+			g4.vertices.push(ppppg1);
+			g4.vertices.push(ppppg2);
+			g4.vertices.push(ppppg3);			
+			g4.faces.push( new THREE.Face3(0,1,2) );
+			g4.computeFaceNormals();
+
+			geo5 = new THREE.Geometry();
+			var p4 = new THREE.Vector3(-1,0,1);
+			var p5 = new THREE.Vector3(-1,0,-1);
+			var p6 = new THREE.Vector3(-1,2,-1); 
+			geo5.vertices.push(p4);
+			geo5.vertices.push(p5);
+			geo5.vertices.push(p6);			
+			geo5.faces.push( new THREE.Face3(0,1,2) );
+			geo5.computeFaceNormals();
+
+			g5 = new THREE.Geometry();
+			var pg4 = new THREE.Vector3(-3,0,3);
+			var pg5 = new THREE.Vector3(-3,0,-3);
+			var pg6 = new THREE.Vector3(-3,1,-3);                  
+			g5.vertices.push(pg4);
+			g5.vertices.push(pg5);
+			g5.vertices.push(pg6);			
+			g5.faces.push( new THREE.Face3(0,1,2) );
+			g5.computeFaceNormals();
+
+			geo6 = new THREE.Geometry();
+			var pp4 = new THREE.Vector3(-1,2, 1);
+			var pp5 = new THREE.Vector3(-1,2,-1);
+			var pp6 = new THREE.Vector3(-1,0,1); 
+			geo6.vertices.push(pp4);
+			geo6.vertices.push(pp5);
+			geo6.vertices.push(pp6);			
+			geo6.faces.push( new THREE.Face3(0,1,2) );
+			geo6.computeFaceNormals();
+
+			g6 = new THREE.Geometry();
+			var ppg4 = new THREE.Vector3(-3,1,3);
+			var ppg5 = new THREE.Vector3(-3,1,-3);
+			var ppg6 = new THREE.Vector3(-3,0,3);                  
+			g6.vertices.push(ppg4);
+			g6.vertices.push(ppg5);
+			g6.vertices.push(ppg6);			
+			g6.faces.push( new THREE.Face3(0,1,2) );
+			g6.computeFaceNormals();
+
+			geo7 = new THREE.Geometry();
+			var ppp4 = new THREE.Vector3(-1,0, -1);
+			var ppp5 = new THREE.Vector3(1,0,-1);
+			var ppp6 = new THREE.Vector3(1,2,-1); 
+			geo7.vertices.push(ppp4);
+			geo7.vertices.push(ppp5);
+			geo7.vertices.push(ppp6);			
+			geo7.faces.push( new THREE.Face3(0,1,2) );
+			geo7.computeFaceNormals();
+
+			g7 = new THREE.Geometry();
+			var pppg4 = new THREE.Vector3(-3,0,-3);
+			var pppg5 = new THREE.Vector3(3,0,-3);
+			var pppg6 = new THREE.Vector3(3,1,-3);                  
+			g7.vertices.push(pppg4);
+			g7.vertices.push(pppg5);
+			g7.vertices.push(pppg6);			
+			g7.faces.push( new THREE.Face3(0,1,2) );
+			g7.computeFaceNormals();
+
+			geo8 = new THREE.Geometry();
+			var pppp4 = new THREE.Vector3(1,2,-1);
+			var pppp5 = new THREE.Vector3(-1,2,-1);
+			var pppp6 = new THREE.Vector3(-1,0,-1); 
+			geo8.vertices.push(pppp4);
+			geo8.vertices.push(pppp5);
+			geo8.vertices.push(pppp6);			
+			geo8.faces.push( new THREE.Face3(0,1,2) );
+			geo8.computeFaceNormals();
+
+			g8 = new THREE.Geometry();
+			var ppppg4 = new THREE.Vector3(3,1,-3);
+			var ppppg5 = new THREE.Vector3(-3,1,-3);
+			var ppppg6 = new THREE.Vector3(-3,0,-3);                  
+			g8.vertices.push(ppppg4);
+			g8.vertices.push(ppppg5);
+			g8.vertices.push(ppppg6);			
+			g8.faces.push( new THREE.Face3(0,1,2) );
+			g8.computeFaceNormals();
+
+			var punto0 = new THREE.Vector3(0,3.4,0);			
+                        var geometria = new THREE.Geometry();
+			var radio = 1.5;
+			var res = 10.0;
+			geometria.vertices.push( punto0 );
+            for( var i = 0; i <= res; i++){
+                var punto = new THREE.Vector3();
+				punto.x = radio * Math.cos( ( 2 * Math.PI * i )/ res );
+                                punto.y = 2.0;
+                                punto.z = radio * Math.sin( ( 2 * Math.PI * i )/ res );
+				geometria.vertices.push( punto );				
+            }
+			fan = new TRIANGLE_FAN(geometria);	
+			fan.draw();
+
+			//CREAR LOS MATERIALES
+                         var material1 = new THREE.MeshBasicMaterial( { color: colorB, side:THREE.DoubleSide } );
+                         var material2 = new THREE.MeshBasicMaterial( { color: colorGd, side:THREE.DoubleSide } );
+                         var material3 = new THREE.MeshBasicMaterial( { color: colorG, side:THREE.DoubleSide } );
+                         var matLinea = new THREE.LineBasicMaterial( { color: colorR } );
+			
+			//CREAR LOS OBJETOS
+			objeto1  = new THREE.Mesh( geo1, material1 );            
+                        objeto1.matrixAutoUpdate = false;
+			obj1  = new THREE.Mesh( g1, material2 );            
+                        obj1.matrixAutoUpdate = false;
+			objeto2  = new THREE.Mesh( geo2, material1 );            
+                        objeto2.matrixAutoUpdate = false;
+			obj2  = new THREE.Mesh( g2, material3 );            
+                        obj2.matrixAutoUpdate = false;
+			objeto3  = new THREE.Mesh( geo3, material1 );            
+                        objeto3.matrixAutoUpdate = false;
+			obj3  = new THREE.Mesh( g3, material2 );            
+                        obj3.matrixAutoUpdate = false;
+			objeto4  = new THREE.Mesh( geo4, material1 );            
+                        objeto4.matrixAutoUpdate = false;
+			obj4  = new THREE.Mesh( g4, material3 );            
+                        obj4.matrixAutoUpdate = false;
+			objeto5  = new THREE.Mesh( geo5, material1 );            
+                        objeto5.matrixAutoUpdate = false;
+			obj5  = new THREE.Mesh( g5, material2 );            
+                        obj5.matrixAutoUpdate = false;
+			objeto6  = new THREE.Mesh( geo6, material1 );            
+                        objeto6.matrixAutoUpdate = false;
+			obj6  = new THREE.Mesh( g6, material3 );            
+                        obj6.matrixAutoUpdate = false;
+			objeto7  = new THREE.Mesh( geo7, material1 );            
+                        objeto7.matrixAutoUpdate = false;
+			obj7  = new THREE.Mesh( g7, material2 );            
+                        obj7.matrixAutoUpdate = false;
+			objeto8  = new THREE.Mesh( geo8, material1 );            
+                        objeto8.matrixAutoUpdate = false;
+			obj8  = new THREE.Mesh( g8, material3);            
+                        obj8.matrixAutoUpdate = false;
+			cono = new THREE.Line( geometria, matLinea );
+
+            
+		  	//AGREGAR A LA ESCENA
+                        scene.add( gridHelperXZ );	
+			scene.add( objeto1 );
+                        scene.add( obj1 );
+                        scene.add( objeto2 );
+                        scene.add( obj2 );
+                        scene.add( objeto3 );
+                        scene.add( obj3 );
+                        scene.add( objeto4 );
+                        scene.add( obj4 );
+                        scene.add( objeto5 );
+                        scene.add( obj5 );
+                        scene.add( objeto6 );
+                        scene.add( obj6 );
+                        scene.add( objeto7 );
+                        scene.add( obj7 );
+                        scene.add( objeto8 );
+                        scene.add( obj8 );
+			scene.add( cono );
+
+			
+			//MOVER LA CÁMARA
+			camera.position.x = 2;
+			camera.position.y = 5;	 
+		  	camera.position.z = 5;			
+		  	camera.lookAt( origin );
+			}
+    
+    function animate() {
+        requestAnimationFrame( animate );
+        controls.update(); // required if controls.enableDamping = true, or if controls.autoRotate = true
+        render();
+    }
+    
+    function render(){
+        //var dtime = Date.now()-startTime;
+        camera.lookAt( 0, 0, 0 ); 
+        renderer.render( scene, camera );
+    }
+
+    </script>
+  </body>
+</html>
