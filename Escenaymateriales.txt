@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Luces, objetos y materiales </title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <script src="js/three.js"></script>
+	<script src="js/controls/OrbitControls.js"></script>
+	<script src="js/csg.js"></script>
+	<script src="js/THREE.CSG.js"></script>
+    <script>
+            
+		var scene, aspect, camera, renderer, controls;
+		var geo1, geo2;
+		init();
+		animate();
+		function init(){
+			//INICIALIZACIÓN
+	        scene = new THREE.Scene();
+	        aspect = window.innerWidth / window.innerHeight;
+	        camera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000);
+	        renderer = new THREE.WebGLRenderer();
+	        renderer.setSize( window.innerWidth, window.innerHeight );
+	        document.body.appendChild( renderer.domElement );
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+
+			
+			//ELEMENTOS COMUNES
+			var size = 10;
+			var arrowSize = 1;
+			var divisions = size;
+			var origin = new THREE.Vector3( 0, 0, 0 );
+			var x = new THREE.Vector3( 1, 0, 0 );
+			var y = new THREE.Vector3( 0, 1, 0 );
+		  	var z = new THREE.Vector3( 0, 0, 1 );
+		  	var color = new THREE.Color( 0x333333 );
+		  	var colorr = new THREE.Color( 0xFFFF00 );
+		  	var colorR = new THREE.Color( 0xAA3333 );
+		  	var colorG = new THREE.Color( 0x33AA33 );
+		  	var colorB = new THREE.Color( 0x333366 );
+			var colorRd = new THREE.Color( 0xAA6666 );
+		  	var colorBd = new THREE.Color( 0x6666AA );
+		  	var colorGd = new THREE.Color( 0x66AA66 );
+			
+
+			
+		  	var gridHelperXZ = new THREE.GridHelper( size, divisions, color, color );
+			scene.add( gridHelperXZ );
+            
+            //ROTARLAS PARA QUE QUEDEN EN EL ESPACIO ADECUADO
+            gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+
+            //CREAR ILUMINACIÓN
+            var ambient = new THREE.AmbientLight( 0xffffff, .2 );
+            scene.add( ambient );
+			
+            var pointLight = new THREE.PointLight( 0xffffff, 2, 100 );
+            pointLight.position.set( 1, .5, 3 );
+            //scene.add( pointLight );
+			
+            var pointLight = new THREE.PointLight( 0xffffff, .5, 100 );
+            pointLight.position.set( 5, -2, -5 );
+            scene.add( pointLight );
+			
+			//CREAR LAS GEOMETRÍAS
+                        var geo = new THREE.CubeGeometry(1000,1000,1000);
+                        var cubematerials = 
+                         [
+                          new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("texturas/xpos.jpg"), side: THREE.DoubleSide}),
+                          new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("texturas/xneg.jpg"), side: THREE.DoubleSide}),
+                          new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("texturas/ypos.jpg"), side: THREE.DoubleSide}),
+                          new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("texturas/yneg.jpg"), side: THREE.DoubleSide}),
+                          new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("texturas/zpos.jpg"), side: THREE.DoubleSide}),
+                          new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("texturas/zneg.jpg"), side: THREE.DoubleSide})
+                          ];
+ 
+                        var cubematerial = new THREE.MeshFaceMaterial(cubematerials);
+                        var cube = new THREE.Mesh(geo, cubematerial);
+                        scene.add(cube);
+
+
+
+                        var boxGeometry = new THREE.BoxGeometry( 1, 1, 1 );
+                        var box1 = new THREE.BoxGeometry( 5, 1, 2 );
+                        var box2 = new THREE.BoxGeometry( 1, 2, 2 );
+                        var box3 = new THREE.BoxGeometry( 1, 2, 2 );
+                        var box4 = new THREE.BoxGeometry( 5, 2, .5 );
+                        var box5 = new THREE.BoxGeometry( 2, 5, 4 );
+                        var mesa = new THREE.BoxGeometry( 3, 1.5, 2 );
+			var boxGeometry2 = new THREE.BoxGeometry( 20, 6, .5 );
+			var boxGeometry3 = new THREE.BoxGeometry( .5, 6, 20 );
+			var sphereGeometry = new THREE.SphereGeometry( .6, 32, 32 );
+			var spheree = new THREE.SphereGeometry( .2, 32, 32 );
+                        var poster = new THREE.BoxGeometry( .1,4 ,3 );
+                        var letras = new THREE.BoxGeometry( 5,3 ,.1);
+                        var cilindro1 = new THREE.CylinderGeometry( .3, .3, 1.2, .4);
+                        var cilindro2 = new THREE.CylinderGeometry( .3, .3, 1.2, .4);
+                        var cilindro3 = new THREE.CylinderGeometry( .3, .3, 1.2, .4);
+                        var cilindro4 = new THREE.CylinderGeometry( .3, .3, 1.2, .4);
+                        var boxx1 = new THREE.BoxGeometry( 2, 1, 2.5 );
+                        var boxx2 = new THREE.BoxGeometry( .5, 2, 2.5 );
+
+
+			geo1 = new THREE.Geometry();
+			var p1 = new THREE.Vector3(10,0,10);
+			var p2 = new THREE.Vector3(-10,0,10);
+			var p3 = new THREE.Vector3(-10,0,-10);                  
+			geo1.vertices.push(p1);
+			geo1.vertices.push(p2);
+			geo1.vertices.push(p3);			
+			geo1.faces.push( new THREE.Face3(0,1,2) );
+			geo1.computeFaceNormals();
+
+			geo2 = new THREE.Geometry();
+			var pp1 = new THREE.Vector3(-10,0,-10);
+			var pp2 = new THREE.Vector3(10,0,-10);
+			var pp3 = new THREE.Vector3(10,0,10);                  
+			geo2.vertices.push(pp1);
+			geo2.vertices.push(pp2);
+			geo2.vertices.push(pp3);			
+			geo2.faces.push( new THREE.Face3(0,1,2) );
+			geo2.computeFaceNormals();
+						
+			//CREAR LOS MATERIALES
+            var material1 = new THREE.MeshStandardMaterial( { color: colorR, metalness: 0.5, roughness: 0.1 } );
+	    var material2 = new THREE.MeshStandardMaterial( { color: colorG, metalness: 0.5, roughness: 0.1 } );
+	    var material3 = new THREE.MeshStandardMaterial( { color: colorB, metalness: 0.5, roughness: 0.1 } );
+	    var material4 = new THREE.MeshStandardMaterial( { color: colorBd, metalness: 0.5, roughness: 0.1 } );
+	    var material5 = new THREE.MeshStandardMaterial( { color: colorGd, metalness: 0.2, roughness: 0.1 } );
+            var material11 = new THREE.MeshBasicMaterial( { color: color, side:THREE.DoubleSide } );
+	    var material9 = new THREE.MeshStandardMaterial( { colorr: colorGd, metalness: 0.5, roughness: 0.1 } );
+
+			var EsferaGeometry = new THREE.SphereGeometry(2, 32, 32 );
+	                var blocksBase = new THREE.TextureLoader().load( 'textures/NormalMap.jpg' );
+			var blocksNormal = new THREE.TextureLoader().load( 'textures/pared7.jpg' );
+                
+				//STANDARD MATERIAL
+				var brickMaterial = new THREE.MeshStandardMaterial( { 
+                                color:  0x333366 , 
+				    map: blocksNormal,
+					normalMap: blocksBase
+				} );
+
+			var Esfera = new THREE.Mesh( EsferaGeometry, brickMaterial );
+     
+			//scene.add( Esfera );	
+
+
+
+	                var blocksBase2 = new THREE.TextureLoader().load( 'textures/SofaMap.jpg' );
+	                var blocksBasee = new THREE.TextureLoader().load( 'textures/Sofa2.jpg' );
+				//STANDARD MATERIAL
+				var brickMaterial2 = new THREE.MeshStandardMaterial( { 
+                                color:  0xFFFFFF , 
+				    map: blocksBasee,
+				normalMap: blocksBase2,
+                                side:THREE.DoubleSide
+				} );
+
+	                var blocksBasee = new THREE.TextureLoader().load( 'textures/Sofa2.jpg' );
+	                var blocksBaseee = new THREE.TextureLoader().load( 'textures/Sofa2Map.jpg' );
+				//STANDARD MATERIAL
+				var brickMateriall = new THREE.MeshStandardMaterial( { 
+                                color:  0xFFFFFF , 
+				    map: blocksBaseee,
+				normalMap: blocksBasee,
+                                side:THREE.DoubleSide
+				} );
+
+
+
+	                var blocksBase3 = new THREE.TextureLoader().load( 'textures/Madera.jpg' );
+				//STANDARD MATERIAL
+				var brickMaterial3 = new THREE.MeshStandardMaterial( { 
+                    color: 0xFFFF00 , 
+				    map: blocksBase3,
+				normalMap: blocksBase3
+				} );
+
+	                var blocksBase4 = new THREE.TextureLoader().load( 'textures/mesita.jpg' );
+				//STANDARD MATERIAL
+				var brickMaterial4 = new THREE.MeshStandardMaterial( { 
+                    color:  0xffffff , 
+				    map: blocksBase4,
+				normalMap: blocksBase4
+				} );
+
+
+	                var blocksBase5 = new THREE.TextureLoader().load( 'textures/esferaa.jpg' );
+				//STANDARD MATERIAL
+				var brickMaterial5 = new THREE.MeshStandardMaterial( { 
+                    color:  0xffffff , 
+				    map: blocksBase5,
+				normalMap: blocksBase5
+				} );
+
+
+
+	                var blocksBase6 = new THREE.TextureLoader().load( 'textures/poster.jpg' );
+				//STANDARD MATERIAL
+				var brickMaterial6 = new THREE.MeshStandardMaterial( { 
+                    color:  0xffffff , 
+				    map: blocksBase6,
+				normalMap: blocksBase6
+				} );
+
+
+	                var blocksBase7 = new THREE.TextureLoader().load( 'textures/st.jpg' );
+				//STANDARD MATERIAL
+				var brickMaterial7 = new THREE.MeshStandardMaterial( { 
+                    color:  0xffffff , 
+				    map: blocksBase7,
+				normalMap: blocksBase7
+				} );
+
+
+	
+			//CREAR LAS MALLAS
+			var cube = new THREE.Mesh( boxGeometry );
+			var cube2 = new THREE.Mesh( boxGeometry2 );
+			var cube3 = new THREE.Mesh( boxGeometry3 );
+			var cubo = new THREE.Mesh( box1, brickMaterial2 );
+			var cubo2 = new THREE.Mesh( box2, brickMaterial2 );
+			var cubo3 = new THREE.Mesh( box3, brickMaterial2 );
+			var cubo4 = new THREE.Mesh( box4, brickMaterial2  );
+			var cubo5 = new THREE.Mesh( box5, brickMaterial3  );
+			var mesitaa = new THREE.Mesh( mesa, brickMaterial4  );
+			var poster = new THREE.Mesh( poster, brickMaterial6  );
+			var letr = new THREE.Mesh( letras, brickMaterial7  );
+			var sphere = new THREE.Mesh( sphereGeometry );
+			var esfe = new THREE.Mesh( spheree, brickMaterial5 );
+			var cili1 = new THREE.Mesh( cilindro1 );
+			var cili2 = new THREE.Mesh( cilindro2 );
+			var cili3 = new THREE.Mesh( cilindro3 );
+			var cili4 = new THREE.Mesh( cilindro4 );
+			var piso  = new THREE.Mesh( geo1,  material11 );
+			var piso2  = new THREE.Mesh( geo2, material11 );
+			var cuboo = new THREE.Mesh( boxx1, brickMateriall );
+			var cuboo2 = new THREE.Mesh( boxx2, brickMateriall );
+                        cube2.position.z=-10;
+                        cube2.position.y=3;
+                        cube3.position.x=10;
+                        cube3.position.y=3;
+                        cili2.rotation.x=1.57;
+                        cili3.rotation.z=1.57;
+                        cubo.position.z=-8;
+                        cubo.position.y=.5;
+                        cubo2.position.z=-8;
+                        cubo2.position.y=1;
+                        cubo2.position.x=2;
+                        cubo3.position.z=-8;
+                        cubo3.position.y=1;
+                        cubo3.position.x=-2;
+                        cubo4.position.y=1.6;
+                        cubo4.position.z=-8.8;
+                        cubo5.position.y=2.5;
+                        cubo5.position.z=-8;
+                        cubo5.position.x=8.8;
+                        mesitaa.position.y=.8;
+                        esfe.position.y=2.1;
+                        poster.position.y=3.6;
+                        poster.position.x=9.7;
+                        poster.position.z=3;
+                        letr.position.y=4.3;
+                        letr.position.z=-9.7;
+                        cuboo.position.z=7;
+                        cuboo.position.x=8.6;
+                        cuboo.position.y=.5;
+                        cuboo2.position.z=7;
+                        cuboo2.position.x=9.3;
+                        cuboo2.position.y=1.5;
+
+
+
+
+			
+			//CONVERTIR A CSG
+			var boxCSG = THREE.CSG.fromMesh( cube );
+			var sphereCSG = THREE.CSG.fromMesh( sphere );
+			var cili1CSG = THREE.CSG.fromMesh( cili1 );
+			var cili2CSG = THREE.CSG.fromMesh( cili2 );
+			var cili3CSG = THREE.CSG.fromMesh( cili3 );
+			
+			//APLICAR LAS OPERACIONES
+			var result1 = sphereCSG.intersect( boxCSG );
+			var result2 = cili1CSG.union( cili2CSG );
+			var result3 = result2.union( cili3CSG );
+			var result4 = result1.subtract( result3 );
+			var result5 = boxCSG.subtract( sphereCSG );
+
+
+			//CONVERTIR A MALLA DE THREE JS NUEVAMENTE
+			var C2T1 = THREE.CSG.toMesh( result1 );
+			var C2T2 = THREE.CSG.toMesh( result2 );
+			var C2T3 = THREE.CSG.toMesh( result3 );
+			var C2T4 = THREE.CSG.toMesh( result4 );
+			var C2T5 = THREE.CSG.toMesh( result5 );
+
+			
+			cube.material = material1;
+			cube2.material = brickMaterial;
+			cube3.material = brickMaterial;
+			cili4.material = material5;
+
+
+     //LUCES
+
+var pointLight = new THREE.PointLight( 0xff0000, 1.6, 100 );
+pointLight.position.set( -5, 5, 5 );
+scene.add( pointLight );
+
+
+var pointLight = new THREE.PointLight( 0xff0000, 1.6, 100 );
+pointLight.position.set( -6, 6, -3 );
+scene.add( pointLight );
+
+
+var pointLight = new THREE.PointLight(  0x33AA33, 2, 100 );
+pointLight.position.set( 1, 6, 5 );
+scene.add( pointLight );
+
+
+var pointLight = new THREE.PointLight( 0x333366, 1, 10);
+pointLight.position.set( 2, 5, 0);
+scene.add( pointLight );
+var cubeSize = .4;
+var pointLightHelper = new THREE.PointLightHelper( pointLight, cubeSize );
+//scene.add( pointLightHelper );
+
+var pointLight = new THREE.PointLight( 0xff0000, 1, 10 );
+pointLight.position.set( -3, 4, 0 );
+scene.add( pointLight );
+var cubeSize = .4;
+var pointLightHelper = new THREE.PointLightHelper( pointLight, cubeSize );
+//scene.add( pointLightHelper );
+
+var pointLight = new THREE.PointLight( 0x333360, 1, 10 );
+pointLight.position.set( -5, 2, 0);
+scene.add( pointLight );
+var cubeSize = .4;
+var pointLightHelper = new THREE.PointLightHelper( pointLight, cubeSize );
+//scene.add( pointLightHelper );
+
+
+
+var spotLight = new THREE.SpotLight(0x333366  );
+spotLight.position.set(  -4, .7, 1 );
+scene.add( spotLight );
+
+
+			
+			C2T1.position.x=-8;
+			C2T1.position.z=1;
+			C2T2.position.x=3;
+			C2T2.position.z=-.5;
+			C2T3.position.x=2.2;
+			C2T3.position.z=-3;
+			C2T4.position.x=-2;
+			C2T4.position.z=7;
+			C2T1.position.y=1.6;
+			C2T3.position.y=.6;
+			C2T4.position.y=.5;
+			C2T5.position.y=2;
+			C2T5.position.z=0;
+			C2T5.position.y=2.1;
+                        cili4.position.x=-3.5;
+                        cili4.position.z=1;
+                        cili4.position.y=.6;
+                        cili4.position.x=-8;
+			C2T1.material = material5; 
+			C2T2.material = material3;
+			C2T3.material = material1;
+			C2T4.material = material3;
+			C2T5.material = material9;
+
+
+			
+			//AGREGAR A LA ESCENA LOS DIFERENTES ELEMENTOS
+			scene.add( cube2 );
+			scene.add( cube3 );
+			scene.add( cili4 );
+			scene.add( cubo );
+			scene.add( cubo2 );
+			scene.add( cubo3 );
+			scene.add( cubo4 );
+			scene.add( cubo5 );
+			scene.add( mesitaa );
+			scene.add( esfe );
+			scene.add( poster );
+			scene.add( piso );
+			scene.add( piso2 );
+			scene.add( C2T1 );
+			scene.add( letr);
+			scene.add( cuboo );
+			scene.add( cuboo2 );
+			scene.add( C2T4 );
+			scene.add( C2T5 );
+
+			camera.position.x = 5;
+			camera.position.y = 2;
+		  	camera.position.z = 5;
+			camera.lookAt( origin );
+		}
+		function animate(){
+			requestAnimationFrame( animate );
+			controls.update();
+			render();
+		}
+		function render(){
+			renderer.render( scene, camera );
+		}
+    </script>
+  </body>
+</html>
