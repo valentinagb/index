@@ -1,0 +1,218 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <title>Raytracing</title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <script src="js/three.js"></script>
+    <script src="js/controls/OrbitControls.js"></script>
+    <script src='js/libs/dat.gui.min.js'></script>
+    <script>
+		var scene, aspect, camera, camera2, renderer, controls;
+        var mapWidth = 320, mapHeight = 240;
+        var w = window.innerWidth, h = window.innerHeight;
+        var frustumSize = 5;
+		var startTime = Date.now();
+		
+		init();
+		animate();
+	
+		function init(){
+			scene = new THREE.Scene();
+			scene.background = new THREE.Color( 0xAAAAAA );
+			aspect = window.innerWidth / window.innerHeight;
+			camera = new THREE.PerspectiveCamera( 45, aspect, 0.1, 1000);
+			camera2 = new THREE.PerspectiveCamera( 45, 1.33, 0.1, 50);
+            var helper = new THREE.CameraHelper( camera2 );
+            scene.add( helper );
+			renderer = new THREE.WebGLRenderer({antialias: true});
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			controls = new THREE.OrbitControls( camera, renderer.domElement );
+            
+			var vector = new THREE.Vector3();
+			camera2.getWorldDirection( vector );
+			console.log(vector);
+			
+			var size = 10;
+			var arrowSize = 1;
+			var divisions = size;
+			var origin = new THREE.Vector3( 0, 0, 0 );
+			var x = new THREE.Vector3( 1, 0, 0 );
+			var y = new THREE.Vector3( 0, 1, 0 );
+		  	var z = new THREE.Vector3( 0, 0, 1 );
+			var color1 = new THREE.Color( 0xFFFFFF );
+		  	var color2 = new THREE.Color( 0x333333 );
+		  	var colorR = new THREE.Color( 0xAA3333 );
+		  	var colorG = new THREE.Color( 0x33AA33 );
+		  	var colorB = new THREE.Color( 0x333366 );
+		  
+		  	//CREAR LAS GRILLAS PARA EL ESCENARIO
+		  	var axesHelper = new THREE.AxesHelper( size );
+		  	var gridHelperXY = new THREE.GridHelper( size, divisions, color1, color1);
+		  	var gridHelperXZ = new THREE.GridHelper( size, divisions, color2, color2 );
+		  	var gridHelperYZ = new THREE.GridHelper( size, divisions, color2, color2 );
+            
+            //ROTARLAS PARA QUE QUEDEN EN EL ESPACIO ADECUADO
+            gridHelperXY.rotateOnWorldAxis ( x, THREE.Math.degToRad(90) );
+            gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+            gridHelperYZ.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+            
+            //CREAR LAS FLECHAS QUE INDICAN LOS EJES DE COORDENADAS 3D
+            var arrowX = new THREE.ArrowHelper( x, origin, arrowSize, colorR );
+            var arrowY = new THREE.ArrowHelper( y, origin, arrowSize, colorG );
+            var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorB );
+            
+            //CREAR ILUMINACIÓN
+            var ambient = new THREE.AmbientLight( 0xffffff, 2 );
+            scene.add( ambient );
+            
+            var pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
+            pointLight.position.set( 5, 5, -5 );
+            scene.add( pointLight );
+            
+			//CREAR LAS GEOMETRÍAS
+			//Far plane
+			var width = 16.0;
+			var height = 9.0;
+			var planeGeometry = new THREE.PlaneGeometry(width, height);
+
+			//CUBO EN EL ESPACIO
+			var boxGeometry = new THREE.BoxGeometry(2,3,2);
+			var boxGeometry2 = new THREE.BoxGeometry(2,1,2);
+                        var cilindro1 = new THREE.CylinderGeometry( .7, .7, 1.6, .8);
+                        var cilindro2 = new THREE.CylinderGeometry( .8, .8, 1.7, .9);
+				
+            //CREAR LOS MATERIALES
+            var material1 = new THREE.MeshStandardMaterial( { color: 0xAA3333, metalness: 0.5, roughness: 0.1 } );
+            var material2 = new THREE.MeshStandardMaterial( { color: 0x33AA33, metalness: 0.5, roughness: 0.1 } );
+            var material3 = new THREE.MeshStandardMaterial( { color: 0x3333AA, metalness: 0.5, roughness: 0.1 } );
+			
+			//CREAR LOS OBJETOS
+            scene.add( arrowX );
+            scene.add( arrowY );
+            scene.add( arrowZ );
+            
+                        var geometry = new THREE.SphereGeometry( 3, 8, 8 );
+			var meshMaterial = new THREE.MeshStandardMaterial( {color: 0x00ff00} );
+			var meshMaterial2 = new THREE.MeshStandardMaterial( {color: 0xAA3333} );
+			var meshMaterial3 = new THREE.MeshStandardMaterial( {color: 0x333366 } );
+			meshMaterial.vertexColors = THREE.FaceColors;
+			
+			var lineMaterial = new THREE.LineBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.9 } );
+
+			var sphere = new THREE.Mesh( geometry, meshMaterial );
+			var cube = new THREE.Mesh( boxGeometry, meshMaterial2 );
+			var cube2 = new THREE.Mesh( boxGeometry2, meshMaterial2 );
+			var cili1 = new THREE.Mesh( cilindro1, meshMaterial );
+			var cili2 = new THREE.Mesh( cilindro2, meshMaterial3 );
+			var lines = new THREE.LineSegments( geometry, lineMaterial );
+			var lines2 = new THREE.LineSegments( boxGeometry, lineMaterial );
+			var lines3 = new THREE.LineSegments( cilindro1, lineMaterial );
+			var lines4 = new THREE.LineSegments( cilindro2, lineMaterial );
+			var lines5 = new THREE.LineSegments( boxGeometry2, lineMaterial );
+			var geometryMod = new THREE.Geometry;
+
+                        sphere.position.z=2;                        
+                        lines.position.z=2;
+
+                        cili1.position.z=-5;
+                        cili1.rotation.z=33;
+                        lines3.position.z=-5;
+                        lines3.rotation.z=33;
+
+
+                        cili2.position.x=-5;
+                        cili2.rotation.x=33;
+                        lines4.position.x=-5;
+                        lines4.rotation.x=33;
+
+                        cube.position.z=-4;
+                        cube.position.x=5;
+                        lines2.position.z=-4;
+                        lines2.position.x=5;
+
+
+                        cube2.position.z=-9;
+                        lines5.position.z=-9;
+
+
+
+			for(var i=0; i<sphere.geometry.faces.length; i++){
+				if(vector.dot(sphere.geometry.faces[i].normal)>0){
+					sphere.geometry.faces[i].color = new THREE.Color( 0xff0000 );
+				}
+				//console.log(sphere.geometry.faces);
+			}
+
+			for(var j=0; j<cili1.geometry.faces.length; j++){
+				if(vector.dot(cili1.geometry.faces[j].normal)>0){
+					cili1.geometry.faces[j].color = new THREE.Color( 0x333333 );
+				}
+			}
+	
+			for(var k=0; k<cube.geometry.faces.length; k++){
+				if(vector.dot(cube.geometry.faces[k].normal)>0){
+					cube.geometry.faces[k].color = new THREE.Color(0x333333); 
+				}
+			}
+			for(var l=0; l<cube2.geometry.faces.length; l++){
+				if(vector.dot(cube2.geometry.faces[l].normal)>0){
+					cube2.geometry.faces[l].color = new THREE.Color( 0x333333); 
+				}
+			}
+		
+			for(var m=0; m<cili2.geometry.faces.length; m++){
+				if(vector.dot(cili2.geometry.faces[m].normal)>0){
+					cili2.geometry.faces[m].color = new THREE.Color(0x333333); 
+				}
+			}
+			
+			var group = new THREE.Group();
+			group.add(sphere);
+			group.add(cube);
+			group.add(cube2);
+			group.add(cili1);
+			group.add(cili2);
+			group.add(lines);
+			group.add(lines2);
+			group.add(lines3);
+			group.add(lines4);
+			group.add(lines5);
+			group.translateZ(-20);
+			scene.add( group );
+			
+			camera.position.x = 5;
+			camera.position.y = 5;
+		  	camera.position.z = 10;
+			
+		  	camera.lookAt( origin );
+		}
+		function animate() {
+			requestAnimationFrame( animate );
+			controls.update(); // required if controls.enableDamping = true, or if controls.autoRotate = true
+			render();
+		}
+        function render() {
+            renderer.setViewport( 0, 0, w, h );
+            renderer.setScissor( 0, 0, w, h );
+            renderer.render( scene, camera );
+            renderer.setViewport( 10, 10, mapWidth, mapHeight );
+            renderer.setScissor( 10, 10, mapWidth, mapHeight );
+            renderer.setScissorTest( true );
+            renderer.render( scene, camera2 );
+		}
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
